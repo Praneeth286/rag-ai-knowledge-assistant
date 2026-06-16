@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+faiss_index/
+data/*
+!data/.gitkeep
+.DS_Store

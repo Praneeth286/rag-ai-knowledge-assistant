@@ -1,0 +1,11 @@
+fastapi>=0.111
+uvicorn[standard]>=0.30
+langchain>=0.2
+langchain-community>=0.2
+langchain-openai>=0.1
+langchain-text-splitters>=0.2
+faiss-cpu>=1.8
+openai>=1.30
+pydantic>=2.7
+pydantic-settings>=2.3
+python-dotenv>=1.0
