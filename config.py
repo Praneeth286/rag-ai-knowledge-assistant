@@ -1,27 +1,24 @@
-"""Application configuration loaded from environment variables."""
 from functools import lru_cache
-
-from pydantic_settings import BaseSettings
-
+from pydantic import Field, model_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    openai_api_key: str = ""
-    chat_model: str = "gpt-4o"
-    embedding_model: str = "text-embedding-3-small"
+    model_config = SettingsConfigDict(env_file='.env', extra='ignore')
+    openai_api_key: str = ''
+    chat_model: str = 'gpt-4o'
+    embedding_model: str = 'text-embedding-3-small'
+    chunk_size: int = Field(800, ge=100, le=10000)
+    chunk_overlap: int = Field(120, ge=0)
+    top_k: int = Field(4, ge=1, le=20)
+    index_path: str = 'faiss_index'
+    data_root: str = 'data'
 
-    # Retrieval / chunking
-    chunk_size: int = 800
-    chunk_overlap: int = 120
-    top_k: int = 4
-
-    # Vector store
-    index_path: str = "faiss_index"
-
-    class Config:
-        env_file = ".env"
-
+    @model_validator(mode='after')
+    def validate_overlap(self):
+        if self.chunk_overlap >= self.chunk_size:
+            raise ValueError('chunk_overlap must be smaller than chunk_size')
+        return self
 
 @lru_cache
-def get_settings() -> Settings:
-    """Return a cached Settings instance."""
+def get_settings():
     return Settings()
